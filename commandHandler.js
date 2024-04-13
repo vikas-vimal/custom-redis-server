@@ -50,7 +50,7 @@ class MessageHandler {
         return this.#handleGetCommand(message[1]);
 
       default:
-        break;
+        return this.#handleUnknownCommand(message);
     }
   }
 
@@ -64,8 +64,18 @@ class MessageHandler {
   }
 
   /**
+   * @param {String[]} args
+   * @returns {String}
+   */
+  #handleUnknownCommand(args = []) {
+    console.log("Received UNKNOWN command...", args);
+    return "-Unknown command!\r\n";
+  }
+
+  /**
    * @param {String} key
    * @param {String} value
+   * @returns {String}
    */
   #handleSetCommand(key, value) {
     console.log("Received SET command...");
@@ -76,6 +86,7 @@ class MessageHandler {
 
   /**
    * @param {String} key
+   * @returns {String}
    * @returns {String}
    */
   #handleGetCommand(key) {
