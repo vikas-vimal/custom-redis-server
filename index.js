@@ -1,9 +1,10 @@
 const net = require("net");
 const RedisParser = require("redis-parser");
-const commandHandler = require("./commandHandler");
+const MessageHandler = require("./commandHandler");
 
 const server = net.createServer((socket) => {
   console.log("Client connected...");
+  const messageHandler = new MessageHandler();
 
   socket.on("data", (dataBuffer) => {
     const redisParser = new RedisParser({
@@ -12,14 +13,12 @@ const server = net.createServer((socket) => {
       },
       returnReply: (msg) => {
         console.log("Received:", msg);
-        const result = commandHandler(msg);
-        console.log("Result:", result);
+        const response = messageHandler.handleMessage(msg);
+        console.log("Response:", response);
+        socket.write(response);
       },
     });
-
     redisParser.execute(dataBuffer);
-
-    // socket.write("+OK\r\n");
   });
 });
 
